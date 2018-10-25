@@ -1,0 +1,49 @@
+[comment encoding = UTF-8 /]
+[module generate('http:///urn.ecore')]
+
+[comment  ~~Templates~~ /]
+
+[template public generate(u : URNspec)]
+
+[file (u.name.concat('.txt'), false)]
+
+[if (getNumActors(u) = 0)]
+	[u.generateWithActors()/]
+
+[else]
+	[u.generateWithoutActors()/]
+
+[/if]
+
+[/file]
+
+[/template]
+
+[template private generateWithActors (u : URNspec)]
+
+[for (a : OclAny | u.grlspec.actors)]
+
+	Actor [a]
+
+[/for]
+
+[/template]
+
+[template private generateWithoutActors (u : URNspec)]
+
+
+
+[/template]
+
+
+[comment ~~Queries~~ /]
+
+[query public getNumActors(u : URNspec) : Integer
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getNumActors(URNspec u)', Sequence{u})
+/]
+
+[query public getActorName(a : OclAny) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getActorName(OclAny a)', Sequence{a})
+/]
