@@ -340,9 +340,6 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
-        if (!isInWorkspace(urn.UrnPackage.class)) {
-            resourceSet.getPackageRegistry().put(urn.UrnPackage.eINSTANCE.getNsURI(), urn.UrnPackage.eINSTANCE);
-        }
         
         /*
          * If you want to change the content of this method, do NOT forget to change the "@generated"
