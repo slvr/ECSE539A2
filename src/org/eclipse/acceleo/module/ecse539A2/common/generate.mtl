@@ -1,5 +1,5 @@
 [comment encoding = UTF-8 /]
-[module generate('http:///urn.ecore')]
+[module generate('http:///urn.ecore', 'http:///urncore.ecore', 'http:///grl.ecore')]
 
 [comment  ~~Templates~~ /]
 
@@ -21,7 +21,7 @@
 
 [template private generateWithActors (u : URNspec)]
 
-[for (a : OclAny | u.grlspec.actors)]
+[for (a : Actor | u.grlspec.actors)]
 
 	Actor [getActorName(a)/] {
 
@@ -36,6 +36,24 @@
 [/template]
 
 [template private generateWithoutActors (u : URNspec)]
+
+	features [getRootName(u)/] {
+		[for ()]
+
+		[/for]
+
+	}
+
+[/template]
+
+[template private getFurtherElement (el : ElementLink)]
+
+	[getLinkType(el)/]
+
+[/template]
+
+
+[template private getChildNodes (g : IntentionalElement)]
 
 
 
@@ -52,4 +70,44 @@
 [query public getActorName(a : OclAny) : String
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
 		'getActorName(OclAny a)', Sequence{a})
+/]
+
+[query public getRootName(u : URNspec) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getRootName(URNspec u)', Sequence{u})
+/]
+
+[query public getOutgoingLinks(ie : IntentionalElement) : Sequence(Integer)
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getOutgoingLinks(IntentionalElement ie)', Sequence{ie})
+/]
+
+[query public getDestNode(l : ElementLink) : Integer
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getDestNode(ElementLink l)', Sequence{l})
+/]
+
+[query public getNodeType(ie : IntentionalElement) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getNodeType(IntentionalElement ie)', Sequence{ie})
+/]
+
+[query public getElementsOfActor(a : Actor) : Sequence(Integer)
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getDestNode(Actor a)', Sequence{a})
+/]
+
+[query public getLinkType(el : ElementLink) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getLinkType(ElementLink l)', Sequence{el})
+/]
+
+[query public getDependencyName(el : ElementLink) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getDependencyName(ElementLink l)', Sequence{el})
+/]
+
+[query public getComplimentaryDecompositionLinks(el : ElementLink) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getComplimentaryDecompositionLinks(ElementLink l)', Sequence{el})
 /]
