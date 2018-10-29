@@ -46,18 +46,27 @@
 [/template]
 
 [template private getFurtherElement (e : ElementLink)]
-
-	[if(e.oclIsKindOf(MandatoryFMLink))]
-		mandatory [getIEName(getLinkParent(e))/] {
-	[elseif (e.oclIsKindOf(OptionalFMLink))]
-		optional [getIEName(getLinkParent(e))/] {
-	[elseif (e.oclIsKindOf(Decomposition))]
-		[getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
+	[if(getNumDestLinks(getLinkParent(e)) <> 0)]
+		[if(e.oclIsKindOf(MandatoryFMLink))]
+			mandatory [getIEName(getLinkParent(e))/]
+		[elseif (e.oclIsKindOf(OptionalFMLink))]
+			optional [getIEName(getLinkParent(e))/]
+		[elseif (e.oclIsKindOf(Decomposition))]
+			[getIEName(getLinkParent(e))/] [getDecompositionType(e)/]
+		[/if]
+	[else]
+		[if(e.oclIsKindOf(MandatoryFMLink))]
+			mandatory [getIEName(getLinkParent(e))/] {
+		[elseif (e.oclIsKindOf(OptionalFMLink))]
+			optional [getIEName(getLinkParent(e))/] {
+		[elseif (e.oclIsKindOf(Decomposition))]
+			[getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
+		[/if]
+			[for (e : ElementLink | getDestLinks(getLinkParent(e)))]
+				getFurtherElement (e);
+			[/for]
+		}
 	[/if]
-		[for (e : ElementLink | getDestLinks(getLinkParent(e)))]
-			getFurtherElement (e);
-		[/for]
-	}
 		
 
 [/template]
@@ -97,6 +106,11 @@
 		'getDecompositionType(ElementLink e)', Sequence{e})
 /]
 
+getNumDestLinks
+[query public getNumDestLinks(ie : IntentionalElement) : Integer
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getNumDestLinks(IntentionalElement ie)', Sequence{ie})
+/]
 [query public getOutgoingLinks(ie : IntentionalElement) : Sequence(Integer)
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
 		'getOutgoingLinks(IntentionalElement ie)', Sequence{ie})
