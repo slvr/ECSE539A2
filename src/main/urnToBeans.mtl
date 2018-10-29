@@ -7,7 +7,7 @@
 
 	[comment @main /]
 	[for (urn : URNspec | u)]
- 		[urn.generate()/]
+ 		[generate(urn)/]
 	[/for]
 
 [/template]

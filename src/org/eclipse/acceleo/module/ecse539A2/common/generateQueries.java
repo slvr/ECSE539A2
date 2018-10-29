@@ -28,34 +28,64 @@ public class generateQueries {
 		return a.getName();
 	}
 	
-	//TODO
 	public String getRootName(URNspec u){
+		GRLspec g = u.getGrlspec();
+		EList<IntentionalElement> list = g.getIntElements();
+		for(IntentionalElement e : list) {
+			if(e.getLinksSrc().size() == 0) {
+				return e.getName();
+			}
+		}
+		
 		return "";
 	}
 	
-	//TODO
-	public ArrayList<Integer> getOutgoingLinks(IntentionalElement ie){
-		return new ArrayList<Integer>();
+	public IntentionalElement getRoot(URNspec u){
+		GRLspec g = u.getGrlspec();
+		EList<IntentionalElement> list = g.getIntElements();
+		for(IntentionalElement e : list) {
+			if(e.getLinksSrc().size() == 0) {
+				return e;
+			}
+		}
+		
+		return null;
+	}
+	
+	public EList<ElementLink> getDestLinks(IntentionalElement ie){		
+		return ie.getLinksDest();
+	}
+
+	public String getIEName(IntentionalElement ie) {
+		return  ie.getName();
+	}
+	
+	public String getDecompositionType(ElementLink e) {
+		return  ((IntentionalElement) e.getDest()).getDecompositionType().getName().toUpperCase();
+	}
+	
+	public IntentionalElement getLinkParent(ElementLink e) {
+		return (IntentionalElement) e.getDest();
+	}
+	
+	/////////////////////////////
+	public EList<IntentionalElement> getDestNodes(ElementLink e){		
+		return e.getToLinks();
 	}
 	
 	//TODO
-	public int getDestNode(ElementLink l){
-		return 0;
+	public EList<ElementLink> getOutgoingLinks(IntentionalElement ie){
+		return ie.getLinksDest();
 	}
 	
 	//TODO
 	public String getNodeType(IntentionalElement ie){
-		return "";
+		return ie.getType().getName();
 	}
 	
 	//TODO
 	public ArrayList<Integer> getElementsOfActor(Actor a){
 		return new ArrayList<Integer>();
-	}
-	
-	//TODO
-	public String getLinkType(ElementLink l){
-		return "";
 	}
 	
 	//TODO

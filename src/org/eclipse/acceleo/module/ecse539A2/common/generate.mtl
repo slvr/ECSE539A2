@@ -1,5 +1,5 @@
 [comment encoding = UTF-8 /]
-[module generate('http:///urn.ecore', 'http:///urncore.ecore', 'http:///grl.ecore')]
+[module generate('http:///urn.ecore', 'http:///urncore.ecore', 'http:///grl.ecore', 'http:///fm.ecore')]
 
 [comment  ~~Templates~~ /]
 
@@ -38,17 +38,27 @@
 [template private generateWithoutActors (u : URNspec)]
 
 	features [getRootName(u)/] {
-		[for ()]
-
+		[for (e : ElementLink | getDestLinks(getRoot(u)))]
+			getFurtherElement (e);
 		[/for]
-
 	}
 
 [/template]
 
-[template private getFurtherElement (el : ElementLink)]
+[template private getFurtherElement (e : ElementLink)]
 
-	[getLinkType(el)/]
+	[if(e.oclIsKindOf(MandatoryFMLink))]
+		mandatory [getIEName(getLinkParent(e))/] {
+	[elseif (e.oclIsKindOf(OptionalFMLink))]
+		optional [getIEName(getLinkParent(e))/] {
+	[elseif (e.oclIsKindOf(Decomposition))]
+		[getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
+	[/if]
+		[for (e : ElementLink | getDestLinks(getLinkParent(e)))]
+			getFurtherElement (e);
+		[/for]
+	}
+		
 
 [/template]
 
@@ -67,9 +77,9 @@
 		'getNumActors(URNspec u)', Sequence{u})
 /]
 
-[query public getActorName(a : OclAny) : String
+[query public getActorName(a : Actor) : String
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
-		'getActorName(OclAny a)', Sequence{a})
+		'getActorName(Actor a)', Sequence{a})
 /]
 
 [query public getRootName(u : URNspec) : String
@@ -77,14 +87,29 @@
 		'getRootName(URNspec u)', Sequence{u})
 /]
 
+[query public getIEName(ie : IntentionalElement) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getIEName(IntentionalElement ie)', Sequence{ie})
+/]
+
+[query public getDecompositionType(e : ElementLink) : String
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getDecompositionType(ElementLink e)', Sequence{e})
+/]
+
 [query public getOutgoingLinks(ie : IntentionalElement) : Sequence(Integer)
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
 		'getOutgoingLinks(IntentionalElement ie)', Sequence{ie})
 /]
 
-[query public getDestNode(l : ElementLink) : Integer
+[query public getDestLinks(ie : IntentionalElement) : Sequence(ElementLink)
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
-		'getDestNode(ElementLink l)', Sequence{l})
+		'getDestNodes(IntentionalElement ie)', Sequence{ie})
+/]
+
+[query public getRoot(u : URNspec) : IntentionalElement
+	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
+		'getRoot(URNspec u)', Sequence{u})
 /]
 
 [query public getNodeType(ie : IntentionalElement) : String
@@ -97,7 +122,7 @@
 		'getDestNode(Actor a)', Sequence{a})
 /]
 
-[query public getLinkType(el : ElementLink) : String
+[query public getLinkParent(el : ElementLink) : IntentionalElement
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
 		'getLinkType(ElementLink l)', Sequence{el})
 /]
