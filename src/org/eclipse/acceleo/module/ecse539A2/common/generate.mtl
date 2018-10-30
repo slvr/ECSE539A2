@@ -51,15 +51,15 @@
 			mandatory [getIEName(getLinkParent(e))/]
 		[elseif (e.oclIsKindOf(OptionalFMLink))]
 			optional [getIEName(getLinkParent(e))/]
-		[elseif (e.oclIsKindOf(Decomposition))]
-			[getIEName(getLinkParent(e))/] [getDecompositionType(e)/]
+		[else]
+			[getIEName(getLinkParent(e))/]
 		[/if]
 	[else]
 		[if(e.oclIsKindOf(MandatoryFMLink))]
-			mandatory [getIEName(getLinkParent(e))/] {
+			mandatory [getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
 		[elseif (e.oclIsKindOf(OptionalFMLink))]
-			optional [getIEName(getLinkParent(e))/] {
-		[elseif (e.oclIsKindOf(Decomposition))]
+			optional [getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
+		[else]
 			[getIEName(getLinkParent(e))/] [getDecompositionType(e)/] {
 		[/if]
 			[for (e : ElementLink | getDestLinks(getLinkParent(e)))]
@@ -106,7 +106,6 @@
 		'getDecompositionType(ElementLink e)', Sequence{e})
 /]
 
-getNumDestLinks
 [query public getNumDestLinks(ie : IntentionalElement) : Integer
 	=invoke('org.eclipse.acceleo.module.ecse539A2.common.generateQueries', 
 		'getNumDestLinks(IntentionalElement ie)', Sequence{ie})

@@ -55,13 +55,19 @@ public class generateQueries {
 	public EList<ElementLink> getDestLinks(IntentionalElement ie){		
 		return ie.getLinksDest();
 	}
+	
+	public Integer getNumDestLinks(IntentionalElement ie){		
+		return ie.getLinksDest().size();
+	}
+
 
 	public String getIEName(IntentionalElement ie) {
 		return  ie.getName();
 	}
 	
 	public String getDecompositionType(ElementLink e) {
-		return  ((IntentionalElement) e.getDest()).getDecompositionType().getName().toUpperCase();
+		// What happens when there's no decompositionType? Should return empty String, but this might give a Null pointer exception. We'll see.
+		return  ((IntentionalElement) e.getDest()).getDecompositionType().getName().toUpperCase(); 
 	}
 	
 	public IntentionalElement getLinkParent(ElementLink e) {
