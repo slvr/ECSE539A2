@@ -67,11 +67,11 @@ public class generateQueries {
 	
 	public String getDecompositionType(ElementLink e) {
 		// What happens when there's no decompositionType? Should return empty String, but this might give a Null pointer exception. We'll see.
-		return  ((IntentionalElement) e.getDest()).getDecompositionType().getName().toUpperCase(); 
+		return  ((IntentionalElement) e.getSrc()).getDecompositionType().getName().toUpperCase(); 
 	}
 	
-	public IntentionalElement getLinkParent(ElementLink e) {
-		return (IntentionalElement) e.getDest();
+	public IntentionalElement getLinkChild(ElementLink e) {
+		return (IntentionalElement) e.getSrc();
 	}
 	
 	/////////////////////////////
