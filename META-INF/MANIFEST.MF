@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Acceleo Ecse539A2 Module Runtime Plug-in
-Bundle-SymbolicName: org.eclipse.acceleo.module.ecse539A2
+Bundle-Name: Acceleo ECSE539Assignment2 Module Runtime Plug-in
+Bundle-SymbolicName: org.eclipse.acceleo.module.ECSE539Assignment2;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.acceleo.module.ecse539A2.Activator
+Bundle-Activator: org.eclipse.acceleo.module.ECSE539Assignment2.Activator
 Bundle-Vendor: Eclipse Modeling Project
-Require-Bundle: org.eclipse.core.runtime, 
- seg.jUCMNav, 
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.ocl,
@@ -15,11 +15,21 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.acceleo.model;bundle-version="3.3.0",
  org.eclipse.acceleo.profiler;bundle-version="3.3.0",
  org.eclipse.acceleo.engine;bundle-version="3.3.0",
- com.google.guava
+ com.google.guava,
+ seg.jUCMNav;bundle-version="7.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
-Export-Package: main,
- org.eclipse.acceleo.module.ecse539A2,
- org.eclipse.acceleo.module.ecse539A2.common
+Export-Package: ca.mcgill.sel.commons,
+ ca.mcgill.sel.commons.emf.util,
+ ca.mcgill.sel.core,
+ ca.mcgill.sel.core.impl,
+ ca.mcgill.sel.core.util,
+ org.eclipse.acceleo.module.ECSE539Assignment2,
+ org.eclipse.acceleo.module.ECSE539Assignment2.common
+Import-Package: fm,
+ grl,
+ grl.kpimodel,
+ urn,
+ urncore
 

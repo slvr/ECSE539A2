@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="seg.jUCMNav.GRLStrategyAlgorithm">
+      <evaluation
+            class="org.eclipse.acceleo.module.ecse539assignment2.Evaluation1"
+            id="org.eclipse.acceleo.module.ECSE539Assignment2.evaluation1"
+            name="org.eclipse.acceleo.module.ECSE539Assignment2.evaluation1">
+      </evaluation>
+   </extension>
+   <extension
+         point="seg.jUCMNav.UseCaseMapExport">
+      <exporter
+            class="org.eclipse.acceleo.module.ecse539assignment2.UseCaseMapExport1"
+            extension="org.eclipse.acceleo.module.ECSE539Assignment2.exporter1"
+            id="org.eclipse.acceleo.module.ECSE539Assignment2.exporter1"
+            name="name"
+            useStream="true">
+      </exporter>
+   </extension>
+   <extension
+         point="seg.jUCMNav.URNReport">
+      <exporter
+            class="org.eclipse.acceleo.module.ecse539assignment2.UseCaseMapExport1"
+            extension="org.eclipse.acceleo.module.ECSE539Assignment2.exporter1"
+            id="org.eclipse.acceleo.module.ECSE539Assignment2.exporter1"
+            name="name"
+            useStream="true">
+      </exporter>
+   </extension>
+   <extension
+         point="seg.jUCMNav.URNImport">
+      <importer
+            class="org.eclipse.acceleo.module.ecse539assignment2.URNExport1"
+            extension="org.eclipse.acceleo.module.ECSE539Assignment2.importer1"
+            id="org.eclipse.acceleo.module.ECSE539Assignment2.importer1"
+            importInSelectedFile="true"
+            name="name"
+            useStream="true">
+      </importer>
+   </extension>
+
+</plugin>

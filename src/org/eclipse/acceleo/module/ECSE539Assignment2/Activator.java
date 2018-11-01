@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.acceleo.module.ecse539A2;
+package org.eclipse.acceleo.module.ECSE539Assignment2;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -21,7 +21,7 @@ public class Activator extends Plugin {
     /**
      * The plug-in ID.
      */
-    public static final String PLUGIN_ID = "org.eclipse.acceleo.module.ecse539A2";
+    public static final String PLUGIN_ID = "org.eclipse.acceleo.module.ECSE539Assignment2";
 
     /**
      * The shared instance.

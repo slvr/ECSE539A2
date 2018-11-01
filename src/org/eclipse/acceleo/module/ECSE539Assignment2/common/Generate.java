@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package main;
+package org.eclipse.acceleo.module.ECSE539Assignment2.common;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,24 +25,24 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * Entry point of the 'UrnToBeans' generation module.
+ * Entry point of the 'Generate' generation module.
  *
  * @generated
  */
-public class UrnToBeans extends AbstractAcceleoGenerator {
+public class Generate extends AbstractAcceleoGenerator {
     /**
      * The name of the module.
      *
      * @generated
      */
-    public static final String MODULE_FILE_NAME = "/main/urnToBeans";
+    public static final String MODULE_FILE_NAME = "/org/eclipse/acceleo/module/ECSE539Assignment2/common/generate";
     
     /**
      * The name of the templates that are to be generated.
      *
      * @generated
      */
-    public static final String[] TEMPLATE_NAMES = { "umlToBeans" };
+    public static final String[] TEMPLATE_NAMES = { "urnToBeans" };
     
     /**
      * The list of properties files from the launch parameters (Launch configuration).
@@ -65,7 +65,7 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
      *
      * @generated
      */
-    public UrnToBeans() {
+    public Generate() {
         // Empty implementation
     }
 
@@ -85,7 +85,7 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
      *             the model cannot be loaded.
      * @generated
      */
-    public UrnToBeans(URI modelURI, File targetFolder,
+    public Generate(URI modelURI, File targetFolder,
             List<? extends Object> arguments) throws IOException {
         initialize(modelURI, targetFolder, arguments);
     }
@@ -106,7 +106,7 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
      *             This can be thrown in two scenarios : the module cannot be found, or it cannot be loaded.
      * @generated
      */
-    public UrnToBeans(EObject model, File targetFolder,
+    public Generate(EObject model, File targetFolder,
             List<? extends Object> arguments) throws IOException {
         initialize(model, targetFolder, arguments);
     }
@@ -141,7 +141,7 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
                  * add in "arguments" this "String" attribute.
                  */
                 
-                UrnToBeans generator = new UrnToBeans(modelURI, folder, arguments);
+                Generate generator = new Generate(modelURI, folder, arguments);
                 
                 /*
                  * Add the properties from the launch arguments.
@@ -340,6 +340,18 @@ public class UrnToBeans extends AbstractAcceleoGenerator {
     @Override
     public void registerPackages(ResourceSet resourceSet) {
         super.registerPackages(resourceSet);
+        if (!isInWorkspace(fm.FmPackage.class)) {
+            resourceSet.getPackageRegistry().put(fm.FmPackage.eINSTANCE.getNsURI(), fm.FmPackage.eINSTANCE);
+        }
+        if (!isInWorkspace(grl.GrlPackage.class)) {
+            resourceSet.getPackageRegistry().put(grl.GrlPackage.eINSTANCE.getNsURI(), grl.GrlPackage.eINSTANCE);
+        }
+        if (!isInWorkspace(grl.kpimodel.KpimodelPackage.class)) {
+            resourceSet.getPackageRegistry().put(grl.kpimodel.KpimodelPackage.eINSTANCE.getNsURI(), grl.kpimodel.KpimodelPackage.eINSTANCE);
+        }
+        if (!isInWorkspace(urn.UrnPackage.class)) {
+            resourceSet.getPackageRegistry().put(urn.UrnPackage.eINSTANCE.getNsURI(), urn.UrnPackage.eINSTANCE);
+        }
         
         /*
          * If you want to change the content of this method, do NOT forget to change the "@generated"
