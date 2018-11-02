@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 
+import fm.Feature;
 import grl.Actor;
 import grl.Belief;
 import grl.BeliefLink;
@@ -24,6 +25,18 @@ public class generateQueries {
 	public int getNumActors(urn.URNspec u){
 		GRLspec g = u.getGrlspec();
 		return g.getActors().size();
+	}
+	
+	public boolean hasFeatures(urn.URNspec u) {
+		GRLspec g = u.getGrlspec();
+		for(int i = 0; i < g.getIntElements().size(); i++) {
+			try {
+				@SuppressWarnings("unused")
+				Feature f = (Feature)g.getIntElements().get(i);
+				return true;
+			}catch (ClassCastException cce) {}
+		}
+		return false;
 	}
 	
 	public IntentionalElement getRoot(URNspec u){

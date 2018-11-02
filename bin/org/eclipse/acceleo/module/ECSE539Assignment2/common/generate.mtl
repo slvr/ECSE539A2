@@ -14,13 +14,14 @@
 [template public generate(u : URNspec)]
 [if (getNumActors(u) <> 0)]
 [u.generateWithActors()/]
-[else]
+[/if]
+[if (hasFeatures(u))]
 [u.generateWithoutActors()/]
 [/if]
 [/template]
 [template private generateWithActors (u : URNspec)]
 [for (a : Actor | u.grlspec.actors)]
-Actor [getActorName(a)/] {
+actor [a.name/] {
 	[for (ie : IntentionalElement | a.getElementsOfActor())]
 	[ie.getNodeInformation()/]
 	[/for]
@@ -28,51 +29,61 @@ Actor [getActorName(a)/] {
 [/for]
 [/template]
 [template private generateWithoutActors (u : URNspec)]
-features [getRootName(u)/] [getDecompositionType(getRoot(u))/]{
-		[for (e : ElementLink | getDestLinks(getRoot(u)))]
+features [getRoot(u).name/] [getDecompositionType(getRoot(u))/]{
+		[for (e : ElementLink | getRoot(u).linksDest)]
 	[e.getFurtherElement()/]
 		[/for]
 }
 [/template]
 [template private getFurtherElement (e : ElementLink)]
-	[if(getNumDestLinks(getLinkChild(e)) = 0)]
-		[if(e.oclIsKindOf(MandatoryFMLink))]
-mandatory [getIEName(getLinkChild(e))/][elseif (e.oclIsKindOf(OptionalFMLink))]
-optional [getIEName(getLinkChild(e))/][else]
-[getIEName(getLinkChild(e))/][/if][else]
-		[if(e.oclIsKindOf(MandatoryFMLink))]
-mandatory [getIEName(getLinkChild(e))/] [getDecompositionType(getLinkChild(e))/]{
-		[elseif (e.oclIsKindOf(OptionalFMLink))]
-optional [getIEName(getLinkChild(e))/] [getDecompositionType(getLinkChild(e))/]{
+	[if(e.src.oclAsType(IntentionalElement) = 0)]
+		[if(e.oclIsTypeOf(MandatoryFMLink))]
+mandatory [e.src.name/][elseif (e.oclIsKindOf(OptionalFMLink))]
+optional [e.src.name/][else]
+[e.src.name/][/if][else]
+		[if(e.oclIsTypeOf(MandatoryFMLink))]
+mandatory [e.src.name/] [getDecompositionType(e.src.oclAsType(IntentionalElement))/]{
+		[elseif (e.oclIsTypeOf(OptionalFMLink))]
+optional [e.src.name/] [getDecompositionType(e.src.oclAsType(IntentionalElement))/]{
 		[else]
-[getIEName(getLinkChild(e))/] [getDecompositionType(getLinkChild(e))/]{
+[e.src.name/] [getDecompositionType(e.src.oclAsType(IntentionalElement))/]{
 		[/if]
-			[for (e : ElementLink | getDestLinks(getLinkChild(e)))]
+			[for (e : ElementLink | e.src.linksDest)]
 	[getFurtherElement (e)/]
 			[/for]
 }	[/if]
 [/template]
 [template private getNodeInformation (ie : IntentionalElement)]
 [if (ie.oclIsKindOf(Feature))]
-feature [getIEName(ie)/] {
+feature [ie.name/] {
 [else]
-[getNodeType(ie)/] [getIEName(ie)/] {
+[if(getNodeType(ie) = 'ressource')][comment Quality /]
+resource [ie.name/] {
+[else]
+[getNodeType(ie)/] [ie.name/] {
 [/if]
-	[if(hasImportance(ie))]
-	importance [getImportance(ie)/]
+[/if]
+	[if(ie.importance.toString() <> 'None')]
+	importance [ie.importanceQuantitative/]
 	[/if]
 	[for(b : Belief | getBeliefs(ie))]
-	[getBeliefName(b)/]
+	[b.description/]
 	[/for]
-	[for(ie2 : IntentionalElement | getDependencies(ie))]
-	dependsOn [getIEActorName(ie2)/].[getIEName(ie2)/]
+	[for(e : ElementLink | ie.linksSrc)]
+	[if (e.oclIsTypeOf(Belief))]
+	[e.description/]
+	[/if]
+	[if (e.oclIsTypeOf(Decomposition))]
+	[e.dest.oclAsType(IntentionalElement).decompositionType.toString().toLowerCase()/] decomposes [e.dest.name/]
+	[/if]
+	[if (e.oclIsTypeOf(Contribution))]
+	contributesTo [e.dest.name/] [isCorrelated(e.oclAsType(Contribution))/]with [e.oclAsType(Contribution).quantitativeContribution/]
+	[/if]
 	[/for]
-	[for(ie2 : IntentionalElement | getDecompositions(ie))]
-	[getDecompositionType(ie2).toLowerCase()/] decomposes [ie2.name/]
-	[/for]
-	[comment contributesTo/]
-	[for(c : Contribution | getContributions(ie))]
-	contributesTo [c.dest.name/] [isCorrelated(c)/]with [c.quantitativeContribution/]
+	[for(e : ElementLink | ie.linksDest)]
+	[if (e.oclIsTypeOf(Dependency))]
+	dependsOn [getIEActorName(e.src.oclAsType(IntentionalElement))/].[e.src.oclAsType(IntentionalElement).name/]
+	[/if]
 	[/for]
 }
 [/template]
@@ -83,43 +94,24 @@ feature [getIEName(ie)/] {
 		'getNumActors(urn.URNspec)', Sequence{u})
 /]
 
-[query public getActorName(a : Actor) : String
+[query public hasFeatures(u : URNspec) : Boolean
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getActorName(grl.Actor)', Sequence{a})
-/]
-
-[query public getRootName(u : URNspec) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getRootName(urn.URNspec)', Sequence{u})
-/]
-
-[query public getIEName(ie : IntentionalElement) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getIEName(grl.IntentionalElement)', Sequence{ie})
-/]
-
-[query public getDecompositionType(ie : IntentionalElement) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getDecompositionType(grl.IntentionalElement)', Sequence{ie})
+		'hasFeatures(urn.URNspec)', Sequence{u})
 /]
 
 [query public getNumDestLinks(ie : IntentionalElement) : Integer
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
 		'getNumDestLinks(grl.IntentionalElement)', Sequence{ie})
 /]
-[query public getOutgoingLinks(ie : IntentionalElement) : Sequence(Integer)
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getOutgoingLinks(grl.IntentionalElement)', Sequence{ie})
-/]
-
-[query public getDestLinks(ie : IntentionalElement) : Sequence(ElementLink)
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getDestLinks(grl.IntentionalElement)', Sequence{ie})
-/]
 
 [query public getRoot(u : URNspec) : IntentionalElement
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
 		'getRoot(urn.URNspec)', Sequence{u})
+/]
+
+[query public getDecompositionType(ie : IntentionalElement) : String
+	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
+		'getDecompositionType(grl.IntentionalElement)', Sequence{ie})
 /]
 
 [query public getNodeType(ie : IntentionalElement) : String
@@ -132,59 +124,14 @@ feature [getIEName(ie)/] {
 		'getElementsOfActor(grl.Actor)', Sequence{a})
 /]
 
-[query public getLinkChild(el : ElementLink) : IntentionalElement
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getLinkChild(grl.ElementLink)', Sequence{el})
-/]
-
-[query public getDependencyName(el : ElementLink) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getDependencyName(grl.ElementLink)', Sequence{el})
-/]
-
-[query public getComplimentaryDecompositionLinks(el : ElementLink) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getComplimentaryDecompositionLinks(grl.ElementLink)', Sequence{el})
-/]
-
-[query public getImportance(ie : IntentionalElement) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getImportance(grl.IntentionalElement)', Sequence{ie})
-/]
-
-[query public hasImportance(ie : IntentionalElement) : Boolean
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'hasImportance(grl.IntentionalElement)', Sequence{ie})
-/]
-
 [query public getBeliefs(ie : IntentionalElement) : Sequence(Belief)
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
 		'getBeliefs(grl.IntentionalElement)', Sequence{ie})
 /]
 
-[query public getBeliefName(b : Belief) : String
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getBeliefName(grl.Belief)', Sequence{b})
-/]
-
-[query public getDependencies(ie : IntentionalElement) : Sequence(IntentionalElement)
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getDependencies(grl.IntentionalElement)', Sequence{ie})
-/]
-
 [query public getIEActorName(ie : IntentionalElement) : String
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
 		'getIEActorName(grl.IntentionalElement)', Sequence{ie})
-/]
-
-[query public getDecompositions(ie : IntentionalElement) : Sequence(IntentionalElement)
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getDecompositions(grl.IntentionalElement)', Sequence{ie})
-/]
-
-[query public getContributions(ie : IntentionalElement) : Sequence(Contribution)
-	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
-		'getContributions(grl.IntentionalElement)', Sequence{ie})
 /]
 
 [query public isCorrelated(c : Contribution) : String

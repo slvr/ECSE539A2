@@ -14,7 +14,8 @@
 [template public generate(u : URNspec)]
 [if (getNumActors(u) <> 0)]
 [u.generateWithActors()/]
-[else]
+[/if]
+[if (hasFeatures(u))]
 [u.generateWithoutActors()/]
 [/if]
 [/template]
@@ -91,6 +92,11 @@ resource [ie.name/] {
 [query public getNumActors(u : URNspec) : Integer
 	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
 		'getNumActors(urn.URNspec)', Sequence{u})
+/]
+
+[query public hasFeatures(u : URNspec) : Boolean
+	=invoke('org.eclipse.acceleo.module.ECSE539Assignment2.common.generateQueries', 
+		'hasFeatures(urn.URNspec)', Sequence{u})
 /]
 
 [query public getNumDestLinks(ie : IntentionalElement) : Integer
