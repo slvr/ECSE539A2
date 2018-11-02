@@ -1,57 +1,59 @@
-Actor ActorA {
+actor ActorA {
 	softgoal SoftgoalA {
-		importance 100
+		BeliefA
 	}
 	goal GoalA1 {
+		importance 75
 		contributesTo SoftgoalA with 73
 	}
 	goal GoalA2 {
-		BeliefA
-		contributesTo GoalA1 with 77
+		importance 25
+		contributesTo SoftgoalA with -18
+		dependsOn ActorB.SoftgoalB
 	}
 	task TaskA1 {
-		xor  decomposes GoalA1
+		and decomposes GoalA1
 	}
 	task TaskA2 {
-		xor  decomposes GoalA1
+		and decomposes GoalA1
 	}
 	task TaskA3 {
-		and  decomposes GoalA2
+		xor decomposes GoalA2
+		contributesTo GoalA1 correlated with -22
 	}
-	ressource ResourceA {
-		dependsOn ActorB.SoftgoalB
-		and  decomposes GoalA2
+	resource ResourceA {
+		xor decomposes GoalA2
+	}
+	feature FeatureA {
+		xor decomposes GoalA2
 	}
 }
-Actor ActorB {
+actor ActorB {
 	softgoal SoftgoalB {
+		importance 100
 	}
 	goal GoalB {
-		BeliefB
 		contributesTo SoftgoalB with 54
 	}
-	task TaskB2 {
-		or  decomposes GoalB
+	task TaskB1 {
+		BeliefB
+		or decomposes GoalB
+		dependsOn ActorA.ResourceA
 	}
-	ressource ResourceB {
+	task TaskB2 {
+		or decomposes GoalB
+	}
+	task TaskB3 {
+		contributesTo GoalB with 100
+	}
+	resource ResourceB {
 		contributesTo SoftgoalB with 25
 	}
-	task TaskB1 {
-		or  decomposes GoalB
+	feature FeatureB {
+		contributesTo SoftgoalB with 37
 	}
-}
-Actor ActorC {
-	softgoal SoftgoalC1 {
-		importance 45
-	}
-	task TaskC {
-		dependsOn ActorA.TaskA3
-		dependsOn ActorB.TaskB2
-		contributesTo SoftgoalC1 with 59
-		contributesTo SoftgoalC2 correlated with -45
-	}
-	softgoal SoftgoalC2 {
-		importance 55
+	feature FeatureC {
+		contributesTo TaskB3 with -60
 	}
 }
 
